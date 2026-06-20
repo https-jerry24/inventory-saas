@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model audit_logs {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id  String   @db.Uuid
+  user_id    String?  @db.Uuid
+  action     String
+  table_name String
+  record_id  String?  @db.Uuid
+  old_data   Json?
+  new_data   Json?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  tenants    tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_audit_created")
+  @@index([tenant_id], map: "idx_audit_tenant")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categories {
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id   String     @db.Uuid
+  name        String
+  description String?
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  tenants     tenants    @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products    products[]
+
+  @@unique([tenant_id, name])
+}
+
+/// This table is a partition table and requires additional setup for migrations. Visit https://pris.ly/d/partition-tables for more info.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model inventory_logs {
+  id          String   @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id   String   @db.Uuid
+  product_id  String   @db.Uuid
+  user_id     String?  @db.Uuid
+  change_type String
+  qty_before  Int
+  qty_after   Int
+  qty_change  Int
+  notes       String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([tenant_id, created_at], map: "idx_invlogs_tenant_created")
+  @@ignore
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model products {
+  id               String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id        String      @db.Uuid
+  category_id      String?     @db.Uuid
+  supplier_id      String?     @db.Uuid
+  name             String
+  sku              String
+  barcode          String?
+  unit_price       Decimal     @default(0) @db.Decimal(12, 2)
+  quantity_on_hand Int         @default(0)
+  reorder_point    Int         @default(10)
+  created_at       DateTime    @default(now()) @db.Timestamptz(6)
+  categories       categories? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  suppliers        suppliers?  @relation(fields: [supplier_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tenants          tenants     @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([tenant_id, sku])
+  @@index([tenant_id, sku], map: "idx_products_sku")
+  @@index([tenant_id], map: "idx_products_tenant")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model purchase_orders {
+  id           String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id    String     @db.Uuid
+  supplier_id  String?    @db.Uuid
+  status       String     @default("draft")
+  total_amount Decimal    @default(0) @db.Decimal(14, 2)
+  created_at   DateTime   @default(now()) @db.Timestamptz(6)
+  suppliers    suppliers? @relation(fields: [supplier_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tenants      tenants    @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model suppliers {
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id       String            @db.Uuid
+  name            String
+  contact_name    String?
+  email           String?
+  phone           String?
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
+  products        products[]
+  purchase_orders purchase_orders[]
+  tenants         tenants           @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tenants {
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name            String
+  slug            String            @unique
+  plan            String            @default("free")
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
+  audit_logs      audit_logs[]
+  categories      categories[]
+  products        products[]
+  purchase_orders purchase_orders[]
+  suppliers       suppliers[]
+  users           users[]
+  warehouses      warehouses[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id         String       @id @db.Uuid
+  tenant_id  String       @db.Uuid
+  email      String       @unique
+  name       String
+  role       String       @default("staff")
+  created_at DateTime     @default(now()) @db.Timestamptz(6)
+  audit_logs audit_logs[]
+  tenants    tenants      @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([tenant_id], map: "idx_users_tenant")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model warehouses {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tenant_id  String   @db.Uuid
+  name       String
+  location   String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  tenants    tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
