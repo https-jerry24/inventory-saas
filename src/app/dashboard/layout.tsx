@@ -4,11 +4,18 @@
 import { createClient } from '@/lib/supabase/server' 
 import { redirect }     from 'next/navigation' 
   
+// Update the navLinks array to include ALL pages: 
 const navLinks = [ 
-  { href: '/dashboard',           label: 'Dashboard',   icon: '' }, 
-  { href: '/dashboard/products',   label: 'Products',    icon: '' }, 
-  { href: '/dashboard/suppliers',  label: 'Suppliers',   icon: '' }, 
-  { href: '/dashboard/import',     label: 'Import CSV',  icon: '' }, 
+  { href: '/dashboard',                  label: 'Dashboard'          }, 
+  { href: '/dashboard/products',          label: 'Products'           }, 
+  { href: '/dashboard/analytics',         label: 'Analytics'          }, 
+  { href: '/dashboard/analytics/movement',label: 'Stock Movement'     }, 
+  { href: '/dashboard/orders',            label: 'Purchase Orders'    }, 
+  { href: '/dashboard/suppliers',         label: 'Suppliers'          }, 
+  { href: '/dashboard/alerts',            label: 'Stock Alerts'       }, 
+  { href: '/dashboard/ai',                label: 'AI Assistant'       }, 
+  { href: '/dashboard/import',            label: 'Import CSV'         }, 
+  { href: '/dashboard/audit',             label: 'Audit Log' },
 ] 
   
 export default async function DashboardLayout({ children }: { children: 
@@ -34,12 +41,13 @@ React.ReactNode }) {
         {/* Nav Links */} 
         <nav className="flex-1 px-3 py-4 space-y-1"> 
           {navLinks.map(link => ( 
-            <a key={link.href} href={link.href} 
-               className="flex items-center gap-3 px-3 py-2 rounded-lg text
-slate-300 hover:bg-slate-800 hover:text-white transition-colors text-sm"> 
-              <span>{link.icon}</span> 
-              {link.label} 
-            </a> 
+            <a
+  key={link.href}
+  href={link.href}
+  className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors text-sm"
+>
+  {link.label}
+</a>
           ))} 
         </nav> 
   
