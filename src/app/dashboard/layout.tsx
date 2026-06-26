@@ -6,7 +6,8 @@ import { redirect }     from 'next/navigation'
   
 // Update the navLinks array to include ALL pages: 
 const navLinks = [ 
-  { href: '/dashboard',                  label: 'Dashboard'          }, 
+  { href: '/dashboard',                   label: 'Dashboard'          }, 
+{ href: '/dashboard/admin',               label: 'Super Admin Panel' },
   { href: '/dashboard/products',          label: 'Products'           }, 
   { href: '/dashboard/analytics',         label: 'Analytics'          }, 
   { href: '/dashboard/analytics/movement',label: 'Stock Movement'     }, 
@@ -16,6 +17,7 @@ const navLinks = [
   { href: '/dashboard/ai',                label: 'AI Assistant'       }, 
   { href: '/dashboard/import',            label: 'Import CSV'         }, 
   { href: '/dashboard/audit',             label: 'Audit Log' },
+  { href: '/dashboard/db-info', label: 'DB Concepts Proof' },
 ] 
   
 export default async function DashboardLayout({ children }: { children: 
