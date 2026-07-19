@@ -285,13 +285,7 @@ export default function HomePage() {
         {/* Content */}
         <div style={{ position:'relative', zIndex:2, maxWidth:'900px', margin:'0 auto' }}>
 
-          {/* Badge */}
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.22)', borderRadius:'999px', padding:'6px 18px', marginBottom:'30px', animation:'sf-fade-up 0.55s ease both' }}>
-            <span style={{ width:'7px', height:'7px', borderRadius:'50%', background:'#10B981', display:'inline-block', position:'relative' }}>
-              <span style={{ position:'absolute', inset:'-3px', borderRadius:'50%', border:'1px solid #10B981', animation:'sf-ring 1.8s ease infinite' }} />
-            </span>
-            <span style={{ fontSize:'12px', color:'#34D399', fontWeight:'600', letterSpacing:'0.04em' }}>G1F24UBSCS024 · University of Central Punjab · DBMS Project</span>
-          </div>
+          
 
           {/* Headline */}
           <h1 style={{ fontSize:'54px', fontWeight:'800', color:'#F8FAFC', lineHeight:'1.1', letterSpacing:'-0.03em', margin:'0 0 6px', animation:'sf-fade-up 0.6s ease 0.1s both' }}>

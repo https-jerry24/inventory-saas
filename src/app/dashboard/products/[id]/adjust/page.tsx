@@ -158,7 +158,7 @@ export default function AdjustStockPage() {
 
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-900 mb-1.5">
               Quantity
             </label>
             <input
@@ -166,7 +166,7 @@ export default function AdjustStockPage() {
               min="1"
               value={changeQty}
               onChange={e => setChangeQty(Number(e.target.value))}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+              className="w-full border border-slate-900 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
             />
           </div>
 

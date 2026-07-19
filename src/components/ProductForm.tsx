@@ -1,6 +1,6 @@
 'use client'
 
-import FoodFactsSearch from '@/components/FoodFactsSearch'
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -24,13 +24,7 @@ type Props = {
   initialData?: Partial<ProductFormData>
 }
 
-type FoodProduct = {
-  barcode:  string
-  name:     string
-  brand:    string
-  imageUrl: string
-  category: string
-}
+
 
 export default function ProductForm({ productId, initialData }: Props) {
   const isEdit = Boolean(productId)
@@ -63,17 +57,7 @@ export default function ProductForm({ productId, initialData }: Props) {
   const set = (field: keyof ProductFormData, value: string | number) =>
     setForm(prev => ({ ...prev, [field]: value }))
 
-  function handleFoodFactsSelect(product: FoodProduct) {
-    setForm(prev => ({
-      ...prev,
-      name:       product.name + (product.brand ? ` — ${product.brand}` : ''),
-      barcode:    product.barcode  || prev.barcode,
-      imageUrl:   product.imageUrl || prev.imageUrl,
-      categoryId: categories.find(
-        c => c.name.toLowerCase().includes('food') || c.name.toLowerCase().includes('beverage')
-      )?.id || prev.categoryId,
-    }))
-  }
+  
 
   async function handleSubmit() {
     setLoading(true); setError(''); setSuccess('')
@@ -142,18 +126,7 @@ export default function ProductForm({ productId, initialData }: Props) {
 
       <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
 
-        <FoodFactsSearch onSelect={handleFoodFactsSelect} />
-
-        {/* First Product Name (from FoodFacts integration) */}
-        <div>
-          <label className={labelCls}>Product Name *</label>
-          <input
-            value={form.name}
-            onChange={e => set('name', e.target.value)}
-            placeholder="e.g. Samsung Galaxy S24"
-            className={inputCls}
-          />
-        </div>
+        
 
         {/* Second Product Name (original field) */}
         <div>
