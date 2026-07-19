@@ -18,7 +18,7 @@ export interface InvoiceItem {
 export interface InvoiceData {
   invoiceNumber: string
 
-  type: 'PURCHASE'
+  type:'PURCHASE' | 'SALE'
 
   issuedAt: string
 
@@ -79,7 +79,10 @@ export function generatePurchaseInvoice(data: InvoiceData) {
 
   doc.setFont('helvetica','bold')
 
-  doc.text('PURCHASE ORDER',140,20)
+  doc.text(
+data.type === 'SALE'
+  ? 'SALES INVOICE'
+  : 'PURCHASE ORDER',140,20)
 
   doc.setFontSize(10)
 

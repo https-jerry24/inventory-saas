@@ -15,7 +15,9 @@ type OrderItem = {
 }
 
 type Supplier = {
-  name: string
+    id: string
+    name: string
+    email?: string | null
 }
 
 type Order = {
@@ -105,7 +107,7 @@ export default function OrderDetailPage({
   // Invoice Data
   // ============================
 
-  const invoiceData: InvoiceData = {
+  const invoice: InvoiceData = {
     invoiceNumber: `PO-${order.id.slice(0, 8).toUpperCase()}`,
 
     type: 'PURCHASE',
@@ -178,7 +180,10 @@ export default function OrderDetailPage({
       {/* Invoice Buttons */}
 
       <div className="flex justify-end mb-5">
-        <InvoiceActions invoiceData={invoiceData} />
+        <InvoiceActions
+  data={invoice}
+  email={order.suppliers?.email ?? undefined}
+/>
       </div>
 
       {message && (

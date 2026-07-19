@@ -8,6 +8,15 @@ const navLinks = [
   { href: '/dashboard/analytics', label: 'Analytics' },
   { href: '/dashboard/analytics/movement', label: 'Stock Movement' },
   { href: '/dashboard/orders', label: 'Purchase Orders' },
+  {
+  href: '/dashboard/customers',
+  label: 'Customers'
+},
+  {
+  href: '/dashboard/sales',
+  label: 'Sales'
+},
+
   { href: '/dashboard/suppliers', label: 'Suppliers' },
   { href: '/dashboard/alerts', label: 'Stock Alerts' },
   { href: '/dashboard/ai', label: 'AI Assistant' },

@@ -10,7 +10,10 @@ const STATUS_STYLES: Record<string, string> = {
 
 type Product          = { id: string; name: string; sku: string }
 type PurchaseOrderItem = { id: string; quantity: number; unit_cost: number; products: Product | null }
-type Supplier         = { id: string; name: string }
+type Supplier = {
+  name: string
+  email?: string | null
+}
 type PurchaseOrder    = {
   id: string; status: string; created_at: string; expected_at: string | null
   suppliers: Supplier | null; purchase_order_items: PurchaseOrderItem[]

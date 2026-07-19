@@ -1,52 +1,71 @@
 'use client'
 
-import { useState } from 'react'
-
 import {
   downloadPurchaseInvoice,
   printPurchaseInvoice,
   type InvoiceData,
 } from '@/lib/invoicePDF'
 
-interface Props {
-  invoiceData: InvoiceData
+type Props = {
+  data: InvoiceData
+  email?: string
 }
 
 export default function InvoiceActions({
-  invoiceData,
+  data,
+  email,
 }: Props) {
-  const [printing, setPrinting] = useState(false)
-  const [downloading, setDownloading] = useState(false)
+  async function sendInvoice() {
+    if (!email) {
+      alert('No email available.')
+      return
+    }
 
-  async function handlePrint() {
-    setPrinting(true)
-    printPurchaseInvoice(invoiceData)
-    setPrinting(false)
-  }
+    const res = await fetch('/api/orders/send-invoice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        invoice: data,
+      }),
+    })
 
-  async function handleDownload() {
-    setDownloading(true)
-    downloadPurchaseInvoice(invoiceData)
-    setDownloading(false)
+    const result = await res.json()
+
+    if (!res.ok) {
+      alert(result.error)
+      return
+    }
+
+    alert('Invoice sent successfully.')
   }
 
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap gap-3">
       <button
-        onClick={handlePrint}
-        disabled={printing}
-        className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-sm"
+        onClick={() => downloadPurchaseInvoice(data)}
+        className="bg-emerald-600 text-white px-5 py-2 rounded-lg"
       >
-        {printing ? 'Printing...' : 'Print'}
+        Download PDF
       </button>
 
       <button
-        onClick={handleDownload}
-        disabled={downloading}
-        className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+        onClick={() => printPurchaseInvoice(data)}
+        className="bg-blue-600 text-white px-5 py-2 rounded-lg"
       >
-        {downloading ? 'Generating...' : 'Save PDF'}
+        Print
       </button>
+
+      {email && (
+        <button
+          onClick={sendInvoice}
+          className="bg-purple-600 text-white px-5 py-2 rounded-lg"
+        >
+          Email Invoice
+        </button>
+      )}
     </div>
   )
 }
